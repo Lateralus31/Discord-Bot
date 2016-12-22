@@ -1,0 +1,25 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^10.0.1",
+    "node-opus": "^0.2.4",
+    "opusscript": "^0.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lateralus31/Discord-Bot.git"
+  },
+  "author": "Thomas Foster",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lateralus31/Discord-Bot/issues"
+  },
+  "homepage": "https://github.com/Lateralus31/Discord-Bot#readme"
+}
