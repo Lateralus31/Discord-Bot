@@ -25,11 +25,14 @@ bot.on('message', message => {
     }
     voiceChannel.join()
       .then(connnection => {
-        let stream = yt("https://www.youtube.com/watch?v=dQw4w9WgXcQ", {audioonly: true});
+        console.log("try play file");
+        connnection.playFile("/audio/herb_Laugh.mp3", {});
+        console.log("Finished");
+        /*let stream = yt("https://www.youtube.com/watch?v=dQw4w9WgXcQ", {audioonly: true});
         const dispatcher = connnection.playStream(stream);
         dispatcher.on('end', () => {
           voiceChannel.leave();
-        });
+        });*/
       });
   }
 });
