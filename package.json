@@ -6,7 +6,8 @@
   "dependencies": {
     "discord.js": "^10.0.1",
     "node-opus": "^0.2.4",
-    "opusscript": "^0.0.1"
+    "opusscript": "^0.0.1",
+    "ytdl-core": "^0.7.21"
   },
   "devDependencies": {},
   "scripts": {

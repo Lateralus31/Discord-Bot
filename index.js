@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const yt = require('ytdl-core');
 const bot = new Discord.Client();
 
 //Reply in chat room back to specific message
@@ -24,15 +25,29 @@ bot.on('message', message => {
       return message.reply(`Please be in a voice channel first!`);
     }
     voiceChannel.join()
+    .then(connection => {
+      return connection.playFile("audio/herb_laugh.mp3");
+     })
+    .then(dispatcher => {
+      dispatcher.on('error', console.error);
+    })
+    .catch(console.error);
+  }
+});
+
+bot.on('message', message => {
+  if (message.content.startsWith('++youtube')) {
+    const voiceChannel = message.member.voiceChannel;
+    if (!voiceChannel) {
+      return message.reply(`Please be in a voice channel first!`);
+    }
+    voiceChannel.join()
       .then(connnection => {
-        console.log("try play file");
-        connnection.playFile("/audio/herb_Laugh.mp3", {});
-        console.log("Finished");
-        /*let stream = yt("https://www.youtube.com/watch?v=dQw4w9WgXcQ", {audioonly: true});
+        let stream = yt("https://www.youtube.com/watch?v=dQw4w9WgXcQ", {audioonly: true});
         const dispatcher = connnection.playStream(stream);
         dispatcher.on('end', () => {
           voiceChannel.leave();
-        });*/
+        });
       });
   }
 });
