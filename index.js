@@ -2,6 +2,9 @@ const Discord = require('discord.js');
 const yt = require('ytdl-core');
 const bot = new Discord.Client();
 
+//Variables
+var LOADDIR = "audio/"
+
 //Reply in chat room back to specific message
 bot.on('message', (message) => {
   if(message.content == "jake")
@@ -19,14 +22,26 @@ bot.on('message', (message) => {
 });
 
 bot.on('message', message => {
-  if (message.content.startsWith('++play')) {
+  if (message.content.startsWith('-')) {
+	//split the message with spaces
+	var audioFile = message.content.split("=");
+	//remove the prefix
+	audioFile.splice(0, 1);
+	//then join the audioFile with spaces
+	//which returns the original message without the prefix
+	audioFile = audioFile.join("=");
+	//join the directory and filename to load from
+	var filePath = LOADDIR + audioFile + ".mp3"
+	//output filename and path to console
+	console.log(filePath);
+	
     const voiceChannel = message.member.voiceChannel;
     if (!voiceChannel) {
       return message.reply(`Please be in a voice channel first!`);
     }
     voiceChannel.join()
     .then(connection => {
-      return connection.playFile("audio/herb_laugh.mp3");
+      return connection.playFile(filePath);
      })
     .then(dispatcher => {
       dispatcher.on('error', console.error);
