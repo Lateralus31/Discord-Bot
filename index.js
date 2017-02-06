@@ -1,5 +1,7 @@
 const Discord = require('discord.js');
 const yt = require('ytdl-core');
+const fs = require('fs');
+const path = require('path');
 const bot = new Discord.Client();
 
 //Variables
@@ -21,6 +23,44 @@ bot.on('message', (message) => {
   }
 });
 
+//Return a list of audio files that can be played to the user
+bot.on('message', message => {
+  if(message.content == "==emotes")
+  {
+    message.channel.sendMessage("", {embed: {
+    color: 3447003,
+    author: {
+      name: bot.user.username,
+      icon_url: bot.user.avatarURL
+    },
+    title: 'This is an embed',
+    url: 'http://google.com',
+    description: 'This is a test embed to showcase what they look like and what they can do.',
+    fields: [
+      {
+        name: 'Fields',
+        value: 'They can have different fields with small headlines.'
+      },
+      {
+        name: 'Masked links',
+        value: 'You can put [masked links](http://google.com) inside of rich embeds.'
+      },
+      {
+        name: 'Markdown',
+        value: 'You can put all the *usual* **__Markdown__** inside of them.'
+      }
+    ],
+    timestamp: new Date(),
+    footer: {
+      icon_url: bot.user.avatarURL,
+      text: '© Example'
+    }
+    }});
+  }
+});
+
+
+//Play an mp3 file located in the audio folder
 bot.on('message', message => {
   if (message.content.startsWith('-')) {
 	//split the message with spaces
@@ -34,7 +74,7 @@ bot.on('message', message => {
 	var filePath = LOADDIR + audioFile + ".mp3"
 	//output filename and path to console
 	console.log(filePath);
-	
+
     const voiceChannel = message.member.voiceChannel;
     if (!voiceChannel) {
       return message.reply(`Please be in a voice channel first!`);
@@ -50,6 +90,7 @@ bot.on('message', message => {
   }
 });
 
+//Stream a youtube videos audio
 bot.on('message', message => {
   if (message.content.startsWith('++youtube')) {
     const voiceChannel = message.member.voiceChannel;
@@ -67,4 +108,10 @@ bot.on('message', message => {
   }
 });
 
+//Log the bot in to the server
 bot.login('MjYxMjk4MzI4MTAzMjg4ODMy.Czy4kg.u9aqQK_jQKe8Gnr6jhfPuPG7o0I');
+
+//catch any errors from promises
+process.on("unhandledRejection", err => {
+  console.error("Uncaught Promise Error: \n" + err.stack);
+});
