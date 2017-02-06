@@ -27,33 +27,28 @@ bot.on('message', (message) => {
 bot.on('message', message => {
   if(message.content == "==emotes")
   {
+    var file;
+    fs.readdir("audio/", function(err, items) {
+      console.log(items);
+
+      for (var i=0; i<items.length; i++) {
+        file = items[i];
+      }
+    });
+
     message.channel.sendMessage("", {embed: {
-    color: 3447003,
+      color: 3447003,
     author: {
       name: bot.user.username,
       icon_url: bot.user.avatarURL
     },
-    title: 'This is an embed',
-    url: 'http://google.com',
-    description: 'This is a test embed to showcase what they look like and what they can do.',
-    fields: [
-      {
-        name: 'Fields',
-        value: 'They can have different fields with small headlines.'
-      },
-      {
-        name: 'Masked links',
-        value: 'You can put [masked links](http://google.com) inside of rich embeds.'
-      },
-      {
-        name: 'Markdown',
-        value: 'You can put all the *usual* **__Markdown__** inside of them.'
-      }
-    ],
+    title: 'These are my current emotes!',
+    description:file[1],
+
     timestamp: new Date(),
     footer: {
       icon_url: bot.user.avatarURL,
-      text: '© Example'
+      text: '© Lateralus31'
     }
     }});
   }
