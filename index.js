@@ -8,6 +8,14 @@ const bot = new Discord.Client();
 var LOADDIR = 'audio/'
 var PREFIX = '=='
 
+//Delete any message in the channel that is a bot command after a delay
+bot.on('message', (message) => {
+  if(message.content.startsWith(PREFIX))
+  {
+    message.delete();
+  }
+});
+
 //Reply in chat room back to specific message
 bot.on('message', (message) => {
   if(message.content == (PREFIX + "jake"))
@@ -64,6 +72,8 @@ bot.on('message', message => {
 //Play an mp3 file located in the audio folder
 bot.on('message', message => {
   if (message.content.startsWith('-=')) {
+  //delete the message
+  message.delete();
 	//split the message with spaces
 	var audioFile = message.content.split("=");
 	//remove the prefix
@@ -125,7 +135,6 @@ bot.login('MjYxMjk4MzI4MTAzMjg4ODMy.Czy4kg.u9aqQK_jQKe8Gnr6jhfPuPG7o0I');
 bot.on('ready', () => {
   bot.user.setGame('The Stomping Land');
 });
-
 
 //catch any errors from promises
 process.on("unhandledRejection", err => {
