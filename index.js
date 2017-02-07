@@ -5,19 +5,20 @@ const path = require('path');
 const bot = new Discord.Client();
 
 //Variables
-var LOADDIR = "audio/"
+var LOADDIR = 'audio/'
+var PREFIX = '=='
 
 //Reply in chat room back to specific message
 bot.on('message', (message) => {
-  if(message.content == "jake")
+  if(message.content == (PREFIX + "jake"))
   {
-    message.channel.sendMessage('is gay');
+    message.channel.sendMessage('is a pleb');
   }
 });
 
 //Reply in PM to specific message
 bot.on('message', (message) => {
-  if(message.content == "zane")
+  if(message.content == (PREFIX + "zane"))
   {
     message.author.sendMessage("has a sick emoji!");
   }
@@ -25,34 +26,32 @@ bot.on('message', (message) => {
 
 //Return a list of audio files that can be played to the user
 bot.on('message', message => {
-  if(message.content == "==emotes")
+  //check for correct command
+  if(message.content == (PREFIX + "emotes"))
   {
-    var fileArray = fs.readdirSync("audio/");
-    /*fs.readdir("audio/", function(err, items) {
-      console.log(items);
-      for (var i=0; i<items.length; i++) {
-        fileArray.push(items[i]);
-      }
-    });*/
-
+    //using fs read the directory with the audio files in it
+    var fileArray = fs.readdirSync(LOADDIR);
+    //print out array to console for debug purposes
     console.log(fileArray);
+    //Initialise files as a blank string
     var files = ''
+    //loop through the fileArray
     for (var i=0; i<fileArray.length; i++)
     {
-      var files = (fileArray[i])+'\n'+files;
+      //Slice the .mp3 off the ends of the files and create a new line
+      var files = (fileArray[i].slice(0,-4))+'\n'+files;
     }
-    //var files = fileArray.toString();
-    //console.log(files);
 
+    //send a message to the current channel with an embed
     message.channel.sendMessage("", {embed: {
       color: 3447003,
     author: {
       name: bot.user.username,
       icon_url: bot.user.avatarURL
     },
-    title: 'These are my current emotes!',
+    title: 'Just add "-=" before these phrases',
+    //print out the files array in the embed message
     description:files,
-
     timestamp: new Date(),
     footer: {
       icon_url: bot.user.avatarURL,
@@ -62,10 +61,9 @@ bot.on('message', message => {
   }
 });
 
-
 //Play an mp3 file located in the audio folder
 bot.on('message', message => {
-  if (message.content.startsWith('-')) {
+  if (message.content.startsWith('-=')) {
 	//split the message with spaces
 	var audioFile = message.content.split("=");
 	//remove the prefix
@@ -95,14 +93,23 @@ bot.on('message', message => {
 
 //Stream a youtube videos audio
 bot.on('message', message => {
-  if (message.content.startsWith('++youtube')) {
+  if (message.content.startsWith(PREFIX + 'youtube ')) {
+    //split the message with spaces
+    var ytLink = message.content.split('v=');
+    //remove the rest of the link and message
+    ytLink.splice(0,1);
+    //Output the video ID to console for debug purposes
+    console.log(ytLink);
+    //check the voicechannel that the user is in
     const voiceChannel = message.member.voiceChannel;
+    //If not in a voice channel send a warning
     if (!voiceChannel) {
       return message.reply(`Please be in a voice channel first!`);
     }
+    //join the correct voice channel
     voiceChannel.join()
       .then(connnection => {
-        let stream = yt("https://www.youtube.com/watch?v=fC7S05vI-BU", {audioonly: true});
+        let stream = yt("https://www.youtube.com/watch?v=" + ytLink, {audioonly: true});
         const dispatcher = connnection.playStream(stream);
         dispatcher.on('end', () => {
           voiceChannel.leave();
