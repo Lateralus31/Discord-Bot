@@ -121,6 +121,12 @@ bot.on('message', message => {
 //Log the bot in to the server
 bot.login('MjYxMjk4MzI4MTAzMjg4ODMy.Czy4kg.u9aqQK_jQKe8Gnr6jhfPuPG7o0I');
 
+//Set the bots current game
+bot.on('ready', () => {
+  bot.user.setGame('The Stomping Land');
+});
+
+
 //catch any errors from promises
 process.on("unhandledRejection", err => {
   console.error("Uncaught Promise Error: \n" + err.stack);
