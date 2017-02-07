@@ -27,14 +27,22 @@ bot.on('message', (message) => {
 bot.on('message', message => {
   if(message.content == "==emotes")
   {
-    var file;
-    fs.readdir("audio/", function(err, items) {
+    var fileArray = fs.readdirSync("audio/");
+    /*fs.readdir("audio/", function(err, items) {
       console.log(items);
-
       for (var i=0; i<items.length; i++) {
-        file = items[i];
+        fileArray.push(items[i]);
       }
-    });
+    });*/
+
+    console.log(fileArray);
+    var files = ''
+    for (var i=0; i<fileArray.length; i++)
+    {
+      var files = (fileArray[i])+'\n'+files;
+    }
+    //var files = fileArray.toString();
+    //console.log(files);
 
     message.channel.sendMessage("", {embed: {
       color: 3447003,
@@ -43,7 +51,7 @@ bot.on('message', message => {
       icon_url: bot.user.avatarURL
     },
     title: 'These are my current emotes!',
-    description:file[1],
+    description:files,
 
     timestamp: new Date(),
     footer: {
@@ -94,7 +102,7 @@ bot.on('message', message => {
     }
     voiceChannel.join()
       .then(connnection => {
-        let stream = yt("https://www.youtube.com/watch?v=dQw4w9WgXcQ", {audioonly: true});
+        let stream = yt("https://www.youtube.com/watch?v=fC7S05vI-BU", {audioonly: true});
         const dispatcher = connnection.playStream(stream);
         dispatcher.on('end', () => {
           voiceChannel.leave();
