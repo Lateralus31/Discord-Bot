@@ -1,10 +1,17 @@
 const Discord = require('discord.js');
+const TwitchApi = require('twitch-api');
 const yt = require('ytdl-core');
 const fs = require('fs');
 const path = require('path');
-const bot = new Discord.Client();
 
 //Variables
+var bot = new Discord.Client();
+// var twitch = new TwitchApi({
+//   clientId: '9sp3dkzpma658nceye9vwehh0inja3',
+//   clientSecret: '72ou1bzi23d9jvvw56opysc1r4h39a',
+//   redirectUri: 'https://128.199.72.161',
+//   scopes: 'user_follows_edit channel_check_subscription channel_commercial channel_editor channel_feed_edit channel_feed_read channel_read channel_stream channel_subscriptions chat_login user_blocks_edit user_blocks_read user_read user_subscriptions'
+// });
 var LOADDIR = 'audio/'
 var PREFIX = '=='
 
@@ -91,11 +98,14 @@ bot.on('message', message => {
       return message.reply(`Please be in a voice channel first!`);
     }
     voiceChannel.join()
-    .then(connection => {
+	.then(connection => {
       return connection.playFile(filePath);
      })
     .then(dispatcher => {
       dispatcher.on('error', console.error);
+	  dispatcher.on('end', () => {
+			voiceChannel.leave();
+		});
     })
     .catch(console.error);
   }
@@ -128,12 +138,44 @@ bot.on('message', message => {
   }
 });
 
+bot.on('message', message => {
+  //if starts with prefix & command + room
+  if (message.content.startsWith(PREFIX + 'moveto '))
+  //split room from message
+  var voiceChannel = message.content.split(" ");
+  //remove command from message
+  voiceChannel.splice(0,1);
+  //output string to console for debug
+  console.log(voiceChannel);
+  //loop through users in authors room
+
+  const targetChannel = message.guild.channels.find(c => c.name === voiceChannel.toString() && c.type === 'voice').id;
+  //const user = message.member.setVoiceChannel
+  //console.log(user);
+  console.log(targetChannel);
+  console.log(message.member.voiceChannel.id);
+  message.member.setVoiceChannel(targetChannel);
+  //user.join(voiceChannel);
+  //move users to "room"
+})
+
+// var code = POST https://api.twitch.tv/kraken/oauth2/token;
+// //TWITCH API oauth:v8hxe2vxfx2t54q55w2mlcheaslcfo
+// //https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id=9sp3dkzpma658nceye9vwehh0inja3&redirect_uri=https://128.199.72.161&scope=user_follows_edit channel_check_subscription channel_commercial channel_editor channel_feed_edit channel_feed_read channel_read channel_stream channel_subscriptions chat_login user_blocks_edit user_blocks_read user_read user_subscriptions&state=72ou1bzi23d9jvvw56opysc1r4h39a
+//   twitch.getAccessToken(code, function(err, body){
+//     if(err){
+//       console.log(err);
+//     } else {
+//       twitch.getUserFollowsChannel(Lateralus31, nautfoxx, console.log())
+//     }
+//   });
+
 //Log the bot in to the server
 bot.login('MjYxMjk4MzI4MTAzMjg4ODMy.Czy4kg.u9aqQK_jQKe8Gnr6jhfPuPG7o0I');
 
 //Set the bots current game
 bot.on('ready', () => {
-  bot.user.setGame('The Stomping Land');
+  bot.user.setGame('Being Broken');
 });
 
 //catch any errors from promises
