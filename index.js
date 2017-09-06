@@ -140,23 +140,21 @@ bot.on('message', message => {
 
 bot.on('message', message => {
   //if starts with prefix & command + room
-  if (message.content.startsWith(PREFIX + 'moveto '))
-  //split room from message
-  var voiceChannel = message.content.split(" ");
-  //remove command from message
-  voiceChannel.splice(0,1);
-  //output string to console for debug
-  console.log(voiceChannel);
-  //loop through users in authors room
-
-  const targetChannel = message.guild.channels.find(c => c.name === voiceChannel.toString() && c.type === 'voice').id;
-  //const user = message.member.setVoiceChannel
-  //console.log(user);
+  if (message.content.startsWith(PREFIX + 'moveto ')) {
+    //split room from message
+    var voiceChannel = message.content.split(" ");
+    //remove command from message
+    voiceChannel.splice(0,1);
+    var targetChannel = message.guild.channels.find(c => c.name === voiceChannel.toString() && c.type === 'voice');
+    if (!targetChannel) {
+      return message.reply(`This is not a valid voice channel`);
+  }
   console.log(targetChannel);
   console.log(message.member.voiceChannel.id);
-  message.member.setVoiceChannel(targetChannel);
-  //user.join(voiceChannel);
-  //move users to "room"
+  message.member.setVoiceChannel(targetChannel.id);
+    //user.join(voiceChannel);
+    //move users to "room"
+  }
 })
 
 // var code = POST https://api.twitch.tv/kraken/oauth2/token;
