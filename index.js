@@ -148,10 +148,15 @@ bot.on('message', message => {
     var targetChannel = message.guild.channels.find(c => c.name === voiceChannel.toString() && c.type === 'voice');
     if (!targetChannel) {
       return message.reply(`This is not a valid voice channel`);
-  }
-  console.log(targetChannel);
-  console.log(message.member.voiceChannel.id);
-  message.member.setVoiceChannel(targetChannel.id);
+    }
+    console.log(targetChannel);
+    console.log(message.member.voiceChannel.id);
+    var curretUsers = Array.from(message.member.voiceChannel.members.values());
+    for(i=0; i<curretUsers.length; i++) {
+      message.guild.members.find('id', curretUsers[i].user.id).setVoiceChannel(targetChannel.id);
+    }
+    //console.log(curretUsers);
+    //curretUsers.forEach(setVoiceChannel(targetChannel.id));
     //user.join(voiceChannel);
     //move users to "room"
   }
