@@ -56,9 +56,8 @@ bot.on('message', message => {
       //Slice the .mp3 off the ends of the files and create a new line
       var files = (fileArray[i].slice(0,-4))+'\n'+files;
     }
-
     //send a message to the current channel with an embed
-    message.channel.sendMessage("", {embed: {
+    message.channel.send("", {embed: {
       color: 3447003,
     author: {
       name: bot.user.username,
@@ -141,26 +140,19 @@ bot.on('message', message => {
 bot.on('message', message => {
   //if starts with prefix & command + room
   if (message.content.startsWith(PREFIX + 'moveto ')) {
-    //split room and command into array
-    var voiceChannel = message.content.split(/ (.+)/,[2]);
-    //remove the command from the array
+    //split room from message
+    var voiceChannel = message.content.split(" ");
+    //remove command from message
     voiceChannel.splice(0,1);
-    //send channel to console for debug purposes
-    console.log(voiceChannel);
-    //find voice channels by name which match voice channel user input
     var targetChannel = message.guild.channels.find(c => c.name === voiceChannel.toString() && c.type === 'voice');
     if (!targetChannel) {
-      //if channel doesn't exist return an error to user
       return message.reply(`This is not a valid voice channel`);
-    }
-    //send channel ID to console for debug purposes
-    console.log(message.member.voiceChannel.id);
-    //put current users in channel into an array
-    var curretUsers = Array.from(message.member.voiceChannel.members.values());
-    for(i=0; i<curretUsers.length; i++) {
-      //set these users voice channel to the one input from command
-      message.guild.members.find('id', curretUsers[i].user.id).setVoiceChannel(targetChannel.id);
-    }
+  }
+  console.log(targetChannel);
+  console.log(message.member.voiceChannel.id);
+  message.member.setVoiceChannel(targetChannel.id);
+    //user.join(voiceChannel);
+    //move users to "room"
   }
 })
 
