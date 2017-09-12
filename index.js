@@ -3,9 +3,12 @@ const TwitchApi = require('twitch-api');
 const yt = require('ytdl-core');
 const fs = require('fs');
 const path = require('path');
+const xml2js = require('xml2js');
+const http = require('http');
 
 //Variables
 var bot = new Discord.Client();
+var parser = new xml2js.Parser();
 // var twitch = new TwitchApi({
 //   clientId: '9sp3dkzpma658nceye9vwehh0inja3',
 //   clientSecret: '72ou1bzi23d9jvvw56opysc1r4h39a',
@@ -161,6 +164,25 @@ bot.on('message', message => {
       //set these users voice channel to the one input from command
       message.guild.members.find('id', curretUsers[i].user.id).setVoiceChannel(targetChannel.id);
     }
+  }
+})
+
+bot.on('message', message => {
+  if (message.content.startsWith(PREFIX + 'id')) {
+    var steamID64 = '';
+    parser.on('error', function(err) { console.log('Parser error', err); });
+    var data = '';
+    http.get('http://steamcommunity.com/id/ReversaL31?xml=1', function(res) {
+       if (res.statusCode >= 200 && res.statusCode < 400) {
+         res.on('data', function(data_) { data += data_.toString(); });
+         res.on('end', function() {
+           parser.parseString(data, function(err, result) {
+             steamID64 = result.profile.steamID64;
+             console.log(steamID64);
+           });
+         });
+       }
+     });
   }
 })
 
