@@ -177,8 +177,12 @@ bot.on('message', message => {
          res.on('data', function(data_) { data += data_.toString(); });
          res.on('end', function() {
            parser.parseString(data, function(err, result) {
-             steamID64 = result.profile.steamID64;
-             console.log(steamID64);
+             var convertor = require('steam-id-convertor');
+             steamID64 = result.profile.steamID64.toString();
+             steamID32 = convertor.to32(steamID64);
+             console.log('Steam64 ID: ', steamID64);
+             console.log('Steam32 ID: ', steamID32);
+             message.reply(steamID64 + ', ' + steamID32);
            });
          });
        }
