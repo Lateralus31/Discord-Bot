@@ -5,6 +5,8 @@ const fs = require('fs');
 const path = require('path');
 const xml2js = require('xml2js');
 const http = require('http');
+const https = require('https');
+const config = require('./config.json')
 
 //Variables
 var bot = new Discord.Client();
@@ -165,30 +167,62 @@ bot.on('message', message => {
       message.guild.members.find('id', curretUsers[i].user.id).setVoiceChannel(targetChannel.id);
     }
   }
-})
+});
 
-bot.on('message', message => {
-  if (message.content.startsWith(PREFIX + 'id')) {
-    var steamID64 = '';
-    parser.on('error', function(err) { console.log('Parser error', err); });
-    var data = '';
-    http.get('http://steamcommunity.com/id/ReversaL31?xml=1', function(res) {
-       if (res.statusCode >= 200 && res.statusCode < 400) {
-         res.on('data', function(data_) { data += data_.toString(); });
-         res.on('end', function() {
-           parser.parseString(data, function(err, result) {
-             var convertor = require('steam-id-convertor');
-             steamID64 = result.profile.steamID64.toString();
-             steamID32 = convertor.to32(steamID64);
-             console.log('Steam64 ID: ', steamID64);
-             console.log('Steam32 ID: ', steamID32);
-             message.reply(steamID64 + ', ' + steamID32);
-           });
-         });
-       }
-     });
+function getSteamID32()
+{
+  var steamID64 = '';
+  var steamID32 = '';
+  parser.on('error', function(err) { console.log('Parser error', err); });
+  var data = '';
+  http.get('http://steamcommunity.com/id/ReversaL31?xml=1', function(res)
+  {
+     if (res.statusCode >= 200 && res.statusCode < 400)
+     {
+       res.on('data', function(data_) { data += data_.toString(); });
+       res.on('end', function()
+       {
+         parser.parseString(data, function(err, result)
+         {
+           var convertor = require('steam-id-convertor');
+           steamID64 = result.profile.steamID64.toString();
+           steamID32 = convertor.to32(steamID64);
+           console.log('success');
+           console.log('Steam64 ID: ', steamID64);
+           console.log('Steam32 ID: ', steamID32);
+        });
+      });
+    };
+  });
+  return steamID32;
+}
+
+bot.on('message', message =>
+{
+  if (message.content.startsWith(PREFIX + 'id'))
+  {
+    getSteamID32();
+    message.reply(steamID32);
+    //console.log(resultID);
   }
-})
+});
+  /*https.get('https://api.opendota.com/api/players/' + steamID32, function(resu)
+  {
+     if (resu.statusCode >= 200 && res.statusCode < 400)
+     {
+       console.log('success');
+       resu.on('playerResult', function(data_) { data += data_.toString(); });
+       resu.on('end', function()
+       {
+         parser.parseString(playerResult, function(err, parsedResult)
+         {
+           console.log(parsedResult);
+         });
+       });
+     }
+   });*/
+
+
 
 // var code = POST https://api.twitch.tv/kraken/oauth2/token;
 // //TWITCH API oauth:v8hxe2vxfx2t54q55w2mlcheaslcfo
@@ -202,7 +236,7 @@ bot.on('message', message => {
 //   });
 
 //Log the bot in to the server
-bot.login('MjYxMjk4MzI4MTAzMjg4ODMy.Czy4kg.u9aqQK_jQKe8Gnr6jhfPuPG7o0I');
+bot.login(config.token);
 
 //Set the bots current game
 bot.on('ready', () => {
