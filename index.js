@@ -14,37 +14,27 @@ var parser = new xml2js.Parser();
 var LOADDIR = 'audio/'
 var PREFIX = '=='
 
-//Delete any message in the channel that is a bot command after a delay
 bot.on('message', (message) =>
 {
+  //Delete command after user types it
   if(message.content.startsWith(PREFIX))
   {
     message.delete();
   }
-});
 
-//Reply in chat room back to specific message
-bot.on('message', (message) =>
-{
+  //Reply in chat room back to specific message
   if(message.content == (PREFIX + "reply"))
   {
     message.channel.sendMessage('here is a reply');
   }
-});
 
-//Reply in PM to specific message
-bot.on('message', (message) =>
-{
+  //Reply in PM to specific message
   if(message.content == (PREFIX + "pm"))
   {
     message.author.sendMessage("here is a personal message");
   }
-});
 
-//Return a list of audio files that can be played to the user
-bot.on('message', message =>
-{
-  //check for correct command
+  //Return a list of audio files that can be played to the user
   if(message.content == (PREFIX + "emotes"))
   {
     //using fs read the directory with the audio files in it
@@ -59,7 +49,6 @@ bot.on('message', message =>
       //Slice the .mp3 off the ends of the files and create a new line
       var files = (fileArray[i].slice(0,-4))+'\n'+files;
     }
-
     //send a message to the current channel with an embed
     message.channel.send("", {embed: {
       color: 3447003,
@@ -77,11 +66,8 @@ bot.on('message', message =>
     }
     }});
   }
-});
 
-//Play an mp3 file located in the audio folder
-bot.on('message', message =>
-{
+  //Play an mp3 file located in the audio folder
   if (message.content.startsWith('-='))
   {
     //delete the message
@@ -123,11 +109,8 @@ bot.on('message', message =>
     //log errors to console
     .catch(console.error);
   }
-});
 
-//Stream a youtube videos audio
-bot.on('message', message =>
-{
+  //Stream a youtube videos audio
   if (message.content.startsWith(PREFIX + 'youtube '))
   {
     //split the message with spaces
@@ -157,11 +140,8 @@ bot.on('message', message =>
       });
     });
   }
-});
 
-//Move all users in current voice channel to new one
-bot.on('message', message =>
-{
+  //Move all users in current voice channel to new one
   //if starts with prefix & command + room
   if (message.content.startsWith(PREFIX + 'moveto '))
   {
@@ -188,8 +168,19 @@ bot.on('message', message =>
       message.guild.members.find('id', curretUsers[i].user.id).setVoiceChannel(targetChannel.id);
     }
   }
+
+  //get users steamID32
+  if (message.content.startsWith(PREFIX + 'id'))
+  {
+    getSteamID32(function(response)
+    {
+      message.reply('done');
+      console.log('this is working', response);
+    })
+  }
 });
 
+//function to get the users Steam info and convert and return the steamID32
 function getSteamID32(callback)
 {
   parser.on('error', function(err) { console.log('Parser error', err); });
@@ -226,18 +217,6 @@ function getSteamID32(callback)
     };
   });
 }
-
-bot.on('message', message =>
-{
-  if (message.content.startsWith(PREFIX + 'id'))
-  {
-    getSteamID32(function(response)
-    {
-      message.reply('done');
-      console.log('this is working', response);
-    })
-  }
-});
   /*https.get('https://api.opendota.com/api/players/' + steamID32, function(resu)
   {
      if (resu.statusCode >= 200 && res.statusCode < 400)
