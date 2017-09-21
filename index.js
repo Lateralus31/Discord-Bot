@@ -176,6 +176,19 @@ bot.on('message', (message) =>
     {
       message.reply('done');
       console.log('this is working', response);
+      https.get('https://api.opendota.com/api/players/' + response, function(res)
+      {
+         if (res.statusCode >= 200 && res.statusCode < 400)
+         {
+           var data = '';
+           res.on('data', function(data_) { data += data_ });
+           res.on('end', function()
+           {
+             var result = JSON.parse(data)
+             console.log(result.solo_competitive_rank);
+           });
+         }
+       });
     })
   }
 });
@@ -207,7 +220,6 @@ function getSteamID32(callback)
            steamID64 = result.profile.steamID64.toString();
            steamID32 = convertor.to32(steamID64);
            //log IDs to console for debug purposes
-           console.log('success');
            console.log('Steam64 ID: ', steamID64);
            console.log('Steam32 ID: ', steamID32);
            //return the ID
@@ -217,21 +229,6 @@ function getSteamID32(callback)
     };
   });
 }
-  /*https.get('https://api.opendota.com/api/players/' + steamID32, function(resu)
-  {
-     if (resu.statusCode >= 200 && res.statusCode < 400)
-     {
-       console.log('success');
-       resu.on('playerResult', function(data_) { data += data_.toString(); });
-       resu.on('end', function()
-       {
-         parser.parseString(playerResult, function(err, parsedResult)
-         {
-           console.log(parsedResult);
-         });
-       });
-     }
-   });*/
 
 //Log the bot in to the server
 bot.login(config.token);
