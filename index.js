@@ -170,11 +170,13 @@ bot.on('message', (message) =>
   }
 
   //get users steamID32
-  if (message.content.startsWith(PREFIX + 'id'))
+  if (message.content.startsWith(PREFIX + 'mmr '))
   {
-    getSteamID32(function(response)
+    var vanityURL = message.content.split(' ');
+    vanityURL.splice(0,1);
+    console.log(vanityURL);
+    getSteamID32(vanityURL, function(response)
     {
-      message.reply('done');
       console.log('this is working', response);
       https.get('https://api.opendota.com/api/players/' + response, function(res)
       {
@@ -185,7 +187,9 @@ bot.on('message', (message) =>
            res.on('end', function()
            {
              var result = JSON.parse(data)
-             console.log(result.solo_competitive_rank);
+             var mmr = result.solo_competitive_rank
+             console.log(mmr);
+             message.reply('Estimated MMR for ' + vanityURL + ' is ' + mmr)
            });
          }
        });
@@ -194,11 +198,11 @@ bot.on('message', (message) =>
 });
 
 //function to get the users Steam info and convert and return the steamID32
-function getSteamID32(callback)
+function getSteamID32(id, callback)
 {
   parser.on('error', function(err) { console.log('Parser error', err); });
   //HTTP request to Steam to get profile information
-  http.get('http://steamcommunity.com/id/ReversaL31?xml=1', function(res)
+  http.get('http://steamcommunity.com/id/' + id + '?xml=1', function(res)
   {
     //if code is successful
      if (res.statusCode >= 200 && res.statusCode < 400)
