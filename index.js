@@ -207,6 +207,44 @@ bot.on('message', (message) =>
        });
     })
   }
+
+  //return a list of the bots commands
+  if(message.content == (PREFIX + "help"))
+  {
+    //send a message to the current channel with an embed
+    message.channel.send("", {embed: {
+      color: 3447003,
+    author: {
+      name: bot.user.username,
+      icon_url: bot.user.avatarURL
+    },
+    title: 'Bot Commands',
+    //send all bot commands as a reply
+    fields: [
+      {
+        name: '==emotes',
+        value: 'Returns a list of audio clips the bot will play in the voice channel you are connected to'
+      },
+      {
+        name: '==youtube <Youtube Link Here>',
+        value: 'Streams the audio of the youtube link to your current voice channel'
+      },
+      {
+        name: '==moveto <Target Voice Channel>',
+        value: 'Moves all users in your current voice channel to the target channel'
+      },
+      {
+        name: '==mmr <Steam Vanity Url>',
+        value: 'Returns estimated mmr from Opendota for selected user'
+      },
+    ],
+    timestamp: new Date(),
+    footer: {
+      icon_url: bot.user.avatarURL,
+      text: '© Lateralus31'
+    }
+    }});
+  }
 });
 
 //function to get the users Steam info and convert and return the steamID32
