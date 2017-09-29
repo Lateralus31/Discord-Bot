@@ -187,9 +187,21 @@ bot.on('message', (message) =>
            res.on('end', function()
            {
              var result = JSON.parse(data)
-             var mmr = result.solo_competitive_rank
+             console.log(result)
+             var mmr = result.mmr_estimate.estimate
              console.log(mmr);
-             message.reply('Estimated MMR for ' + vanityURL + ' is ' + mmr)
+             //reply with an embed containing the estimated mmr for the user
+             message.reply("", {embed: {
+               color: 3447003,
+             author:
+             {
+               name: bot.user.username,
+               icon_url: bot.user.avatarURL
+             },
+             title: 'Estimated MMR for ' + vanityURL,
+             //print out the files array in the embed message
+             description:mmr,
+             }});
            });
          }
        });
@@ -202,6 +214,9 @@ function getSteamID32(id, callback)
 {
   parser.on('error', function(err) { console.log('Parser error', err); });
   //HTTP request to Steam to get profile information
+  var profileType
+  if (!isNaN(id)) {
+    };
   http.get('http://steamcommunity.com/id/' + id + '?xml=1', function(res)
   {
     //if code is successful
@@ -239,7 +254,7 @@ bot.login(config.token);
 
 //Set the bots current game
 bot.on('ready', () => {
-  bot.user.setGame('Being Broken');
+  bot.user.setGame('type ==help for usage');
 });
 
 //catch any errors from promises
