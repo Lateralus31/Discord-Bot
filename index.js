@@ -292,7 +292,7 @@ bot.login(config.token);
 
 //Set the bots current game
 bot.on('ready', () => {
-  bot.user.setGame('type ==help for usage');
+  bot.user.setActivity('type ==help for usage');
 });
 
 //catch any errors from promises
